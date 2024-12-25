@@ -2,8 +2,7 @@
 ## Table of Contents
    - [Features](#Features)
    - [Installation](#installation)
-   - [Docker](#docker)
-
+  
 ## Features
    This is a simple CRM developed in Symfony 7 with follwoings features
    * Login and Registration
@@ -29,12 +28,12 @@
    To get started, clone this repository to your local machine:
 
      
-        git clone https://github.com/Arshad-engr/flaskapp.git
+        git clone https://github.com/Arshad-engr/symfony-crm.git
         
 
   ### 2. Run as a dockerize app
 
-  If you have docker installed in your machine and don't to go with manuall installation, follow these steps to containerize your application
+  If you have docker installed in your machine and don't go with manuall installation, follow these steps to containerize your application
    ```
    docker-compose up --build
 
@@ -45,9 +44,9 @@
    * **phpmyadmin/phpmyadmin** Official phpMyAdmin image for database management.
 
    From these images, three containers will be created
-   * symfony_app, Accessible at [http://localhost:8080](http://localhost:8080)
-   * symfony_phpmyadmin, Accessible at [http://localhost:8081](http://localhost:8081)
-   * symfony_db, listning on 3306:3306 (phpmyadmin service running on top of it)
+   * **symfony_app**, Accessible at [http://localhost:8080](http://localhost:8080)
+   * **symfony_phpmyadmin**, Accessible at [http://localhost:8081](http://localhost:8081)
+   * **symfony_db**, listning on 3306:3306 (phpmyadmin service running on top of it)
 
   
 
