@@ -1,17 +1,46 @@
 security:
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
-        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+        # Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+        App\Entity\User: 'auto'
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
         users_in_memory: { memory: null }
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email # You can use 'username' here if you use a username instead of email
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
             lazy: true
-            provider: users_in_memory
+            provider: app_user_provider
+             # Disable security for login page (to allow public access)
+            pattern: ^/
+            form_login:
+                login_path: app_login      # Path for the login form
+                default_target_path: /dashboard # Redirect to after login
+                username_parameter: _username # The form field for the username (e.g., _username for email)
+                password_parameter: _password
+                always_use_default_target_path: true
+                check_path: app_login
+                enable_csrf: true
+            logout:
+                path: app_logout            # Path for logout
+                # where to redirect after logout
+                # target: app_any_route
+             # Enable Remember Me
+            remember_me:
+                secret: '%env(APP_SECRET)%' # Use your app's secret key
+                lifetime: 604800           # Duration in seconds (e.g., 7 days)
+                path: '/'                  # Path for the cookie
+                secure: auto               # Use "true" to enable secure cookies (HTTPS only)
+
+            # Prevent access to pages that require authentication
+            # anonymous: true
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -22,8 +51,11 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/users, roles: ROLE_ADMIN }   # Only accessible by users with ROLE_ADMIN
+        - { path: ^/tasks, roles: ROLE_ADMIN }   # Only accessible by users with ROLE_ADMIN
+        - { path: ^/create_task, roles: ROLE_ADMIN }   # Only accessible by users with ROLE_ADMIN
+        - { path: ^/dashboard, roles: [ROLE_USER,ROLE_ADMIN] } 
+        - { path: ^/profile, roles: [ROLE_USER,ROLE_ADMIN] }     
 
 when@test:
     security:

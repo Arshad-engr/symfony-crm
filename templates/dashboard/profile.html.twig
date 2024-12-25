@@ -1,0 +1,124 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Symfony-CRM Dashboard
+{% endblock %}
+{% block stylesheets %}
+	<style>
+		.profile-div {
+			top: 86px;
+			height: 30%;
+		}
+		.img-profile {
+			height: 172px;
+		}
+	</style>
+{% endblock %}
+{% block javascripts %}
+	<link
+	href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+ <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+{% endblock %}
+
+{% block body %}
+
+	<!-- Page Wrapper -->
+	<div
+		id="wrapper">
+
+		<!-- Sidebar -->
+		{% include 'includes/_sidebar.html.twig' %}
+		<!-- End of Sidebar -->
+
+		<!-- Content Wrapper -->
+			<div
+			id="content-wrapper" class="d-flex flex-column"> <!-- Main Content -->
+			<div
+				id="content">
+
+				<!-- Topbar -->
+				{% include 'includes/_topbar.html.twig' %}
+				<!-- End of Topbar -->
+
+				<!-- Begin Page Content -->
+					<div class="container-fluid"> {% for messages in app.flashes %}
+						{% for message in messages %}
+							<div class="alert alert-success">
+								{{ message }}
+							</div>
+						{% endfor %}
+					{% endfor %}
+					<div class="row">
+
+						<div class="col-lg-7">
+							<div class="p-7">
+								<div class="text-center">
+									<h1 class="h4 text-gray-900 mb-4">Profile!</h1>
+								</div>
+								<form class="user" action="{{ path('updateProfile') }}" method="POST" enctype="multipart/form-data">
+									<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                                    <div class="form-group">
+										<label for="last_name" class="font-weight-bold">First Name</label>
+										<input type="text" class="form-control form-control" name="first_name" id="first_name" value="{{app.user.firstName}}">
+									</div>
+									<div class="form-group">
+										<label for="last_name" class="font-weight-bold">Last Name</label>
+										<input type="text" class="form-control form-control" name="last_name" id="last_name" value="{{app.user.lastName}}">
+									</div>
+									<div class="form-group">
+										<label for="last_name" class="font-weight-bold">Email</label>
+										<input type="email" class="form-control form-control" name="email" id="email" value="{{app.user.email}}">
+									</div>
+
+									<div class="form-group">
+										<label for="last_name" class="font-weight-bold">Address</label>
+										<input type="text" class="form-control form-control" name="address" id="address" value="{{app.user.address}}">
+									</div>
+									<div class="form-group">
+										<label for="last_name" class="font-weight-bold">DOB</label>
+										<input type="date" class="form-control form-control" name="dob" id="dob" value="{{app.user.dob is null ? "" : app.user.dob.format('Y-m-d')|date('Y-m-d') }}">
+
+									</div>
+
+									<div class="form-group">
+										<label for="last_name" class="font-weight-bold">Roles</label>
+										<select name="roles[]" class="js-example-basic-multiple form-control" multiple="multiple">
+                                        {% for role in ['ROLE_USER', 'ROLE_ADMIN'] %}
+											<option value="{{role}}"  {% if role in app.user.roles %} selected {% endif %} >{{role}}</option>
+                                         {% endfor %}
+										</select>
+									</div>
+									<div class="form-group">
+										<label for="last_name" class="font-weight-bold">Profile</label>
+										<input type="file" class="form-control form-control" name="profile" id="profile">
+									</div>
+									<button type="submit" class="btn btn-primary btn-block">
+										Update Account
+									</button>
+								</form>
+							</div>
+						</div>
+						<div class="col-lg-1 d-block profile-div">
+							<img class="img-profile" src="{{ asset("/uploads/#{app.user.profile}") }}">
+						</div>
+					</div>
+
+				</div>
+				<!-- /.container-fluid -->
+
+			</div>
+			<!-- End of Main Content -->
+
+			<!-- Footer -->
+			{% include 'includes/_footer.html.twig' %}
+			<!-- End of Footer -->
+
+		</div>
+		<!-- End of Content Wrapper -->
+
+	</div>
+	<!-- End of Page Wrapper -->
+  
+{% endblock %}
+
+
