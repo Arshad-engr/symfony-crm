@@ -4,7 +4,7 @@
    - [Installation](#installation)
   
 ## Features
-   This is a simple CRM developed in Symfony 7 with follwoings features
+   This is a simple CRM developed in Symfony 7. This app features two core modules: Users and Tasks. Users log in to their dashboards to view assigned tasks, update task statuses (e.g., Pending or Completed), and generate analytical reports for their activities. Administrators manage task creation, assignment, and oversee user activity within the system. Below are list of features this application have.
    * Login and Registration
    * Roles and Permissions
    * CRUD operation of tasks
