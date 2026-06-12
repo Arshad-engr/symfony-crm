@@ -53,8 +53,8 @@ RUN chmod -R 775 /var/www/symfony/var
 # Install Symfony dependencies
 RUN composer install --optimize-autoloader --no-scripts
 
-# Expose the dynamic port
+# Expose port (Railway sets $PORT dynamically)
 EXPOSE ${PORT:-80}
 
-# Start the application — configure Apache to listen on $PORT at runtime
-CMD ["bash", "-c", "sed -i \"s/Listen 80/Listen ${PORT:-80}/g\" /etc/apache2/ports.conf && sed -i \"s/*:80/*:${PORT:-80}/g\" /etc/apache2/sites-available/000-default.conf && until php bin/console doctrine:query:sql 'SELECT 1' > /dev/null 2>&1; do echo 'Waiting for database...'; sleep 5; done; php bin/console doctrine:migrations:migrate --no-interaction && apache2-foreground"]
+# Start the application
+CMD ["bash", "-c", "sed -i \"s/Listen 80/Listen ${PORT:-80}/g\" /etc/apache2/ports.conf && sed -i \"s/:80>/:${PORT:-80}>/g\" /etc/apache2/sites-available/000-default.conf && until php bin/console doctrine:query:sql 'SELECT 1' > /dev/null 2>&1; do echo 'Waiting for database...'; sleep 5; done; php bin/console doctrine:migrations:migrate --no-interaction && apache2-foreground"]
