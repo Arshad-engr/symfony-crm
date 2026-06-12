@@ -17,11 +17,12 @@ RUN apt-get update && apt-get install -y \
     libjpeg-dev \
     libfreetype6-dev \
     libonig-dev \
+    libpq-dev \
     pkg-config \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install \
     intl \
-    pdo_mysql \
+    pdo_pgsql \
     zip \
     gd \
     mbstring \
