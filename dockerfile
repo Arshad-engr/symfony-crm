@@ -10,20 +10,20 @@ RUN apt-get update && apt-get install -y \
     && a2enmod rewrite \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Composer ONLY ONCE (correct way)
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 RUN chmod +x /usr/bin/composer
 
-# Apache config
 COPY docker/apache/000-default.conf /etc/apache2/sites-available/000-default.conf
 
-# Copy project
 COPY . .
 
-# Install dependencies (clean)
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+# 🔥 IMPORTANT FIX
+RUN COMPOSER_ALLOW_SUPERUSER=1 composer install \
+    --no-dev \
+    --optimize-autoloader \
+    --no-interaction \
+    --no-scripts
 
-# Permissions
 RUN mkdir -p var/cache var/log \
     && chown -R www-data:www-data /var/www/symfony \
     && chmod -R 775 var
