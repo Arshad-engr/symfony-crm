@@ -2,43 +2,29 @@ FROM php:8.2-apache
 
 WORKDIR /var/www/symfony
 
-RUN a2enmod rewrite
-
 RUN apt-get update && apt-get install -y \
-    git \
-    unzip \
-    curl \
-    libicu-dev \
-    libzip-dev \
-    libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
-    libonig-dev \
+    git unzip curl libicu-dev libzip-dev libpng-dev libjpeg-dev libfreetype6-dev libonig-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install \
-        intl \
-        pdo_mysql \
-        zip \
-        gd \
-        mbstring \
-    && apt-get clean \
+    && docker-php-ext-install intl pdo_mysql zip gd mbstring \
+    && a2enmod rewrite \
     && rm -rf /var/lib/apt/lists/*
 
+# Install Composer properly (FIX)
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
+# Copy Apache config
 COPY docker/apache/000-default.conf /etc/apache2/sites-available/000-default.conf
 
+# Copy app
 COPY . .
 
-RUN composer install \
-    --no-dev \
-    --optimize-autoloader \
-    --no-interaction
+# Install dependencies
+RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-RUN mkdir -p var/cache var/log
-
-RUN chown -R www-data:www-data /var/www/symfony
-RUN chmod -R 775 var
+# Permissions
+RUN mkdir -p var/cache var/log \
+    && chown -R www-data:www-data /var/www/symfony \
+    && chmod -R 775 var
 
 EXPOSE 80
 
